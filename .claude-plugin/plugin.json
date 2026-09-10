@@ -1,0 +1,23 @@
+{
+  "name": "drazenbebic-skills",
+  "version": "0.1.0",
+  "description": "Agent skills for real engineering work. Currently a Next.js App Router performance audit method, with dependency-free Lighthouse and Chrome DevTools Protocol tooling.",
+  "author": {
+    "name": "Drazen Bebic",
+    "url": "https://github.com/drazenbebic"
+  },
+  "homepage": "https://github.com/drazenbebic/skills",
+  "repository": "https://github.com/drazenbebic/skills",
+  "license": "MIT",
+  "keywords": [
+    "nextjs",
+    "performance",
+    "lighthouse",
+    "core-web-vitals",
+    "app-router",
+    "engineering"
+  ],
+  "skills": [
+    "./skills/nextjs-performance-audit"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "drazenbebic",
+  "owner": {
+    "name": "Drazen Bebic",
+    "url": "https://github.com/drazenbebic"
+  },
+  "description": "Drazen Bebic's agent skills, as an installable Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "drazenbebic-skills",
+      "source": "./",
+      "description": "Agent skills for real engineering work, starting with a Next.js App Router performance audit method.",
+      "category": "engineering",
+      "keywords": [
+        "nextjs",
+        "performance",
+        "lighthouse",
+        "core-web-vitals"
+      ]
+    }
+  ]
+}
