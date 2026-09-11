@@ -192,6 +192,39 @@ export async function launch({ chromePath, profile = MOBILE, port } = {}) {
   return session;
 }
 
+/**
+ * Render a string that came from the audited page.
+ *
+ * Anything these tools read - element text, class names, console messages,
+ * response headers - is controlled by whoever controls the page, and it ends
+ * up in the context of an agent that is reading this output. A page can try to
+ * use that: text shaped like an instruction, or like tool output, is the
+ * standard indirect prompt injection route.
+ *
+ * Two mechanical defences, because they are the ones that actually work:
+ * newlines and control characters are flattened, so injected content cannot
+ * fabricate structure or impersonate a new section of the report; and the
+ * result is wrapped in guillemets so the boundary of untrusted data is always
+ * visible. Length is capped so a page cannot flood the context.
+ *
+ * The judgement defence is in SKILL.md: treat everything inside the marks as
+ * data to reason about, never as instructions to follow.
+ */
+export function untrusted(value, max = 120) {
+  if (value === null || value === undefined) return '';
+  const flattened = String(value)
+    // C0/C1 controls, including newlines and tabs
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, ' ')
+    // zero-width and bidi marks, which can hide text or reverse its display
+    .replace(/[\u200b-\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069\ufeff]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!flattened) return '';
+  const clipped =
+    flattened.length > max ? `${flattened.slice(0, max)}\u2026` : flattened;
+  return `\u00ab${clipped}\u00bb`;
+}
+
 export function parseArgs(argv) {
   const positional = [];
   const flags = {};

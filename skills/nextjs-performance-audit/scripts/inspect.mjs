@@ -12,7 +12,7 @@
  * redirect on the entry URL, Set-Cookie defeating the CDN.
  */
 
-import { parseArgs } from './cdp.mjs';
+import { parseArgs, untrusted } from './cdp.mjs';
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const url = positional[0];
@@ -47,7 +47,8 @@ async function reportHeaders() {
     });
     const loc = res.headers.get('location');
     console.log(
-      `  Accept-Language ${lang.split(',')[0].padEnd(6)} -> ${res.status}${loc ? ` -> ${loc}` : ''}`,
+      `  Accept-Language ${lang.split(',')[0].padEnd(6)} -> ${res.status}` +
+        `${loc ? ` -> ${untrusted(loc, 120)}` : ''}`,
     );
   }
 
@@ -61,7 +62,7 @@ async function reportHeaders() {
   ];
   for (const h of interesting) {
     const v = res.headers.get(h);
-    if (v) console.log(`  ${h}: ${v}`);
+    if (v) console.log(`  ${h}: ${untrusted(v, 120)}`);
   }
   if (res.headers.get('set-cookie')) {
     console.log('  ^ no shared cache stores a response carrying Set-Cookie');
@@ -169,8 +170,9 @@ async function reportChunks(html) {
   }
   rows.sort((a, b) => b.size - a.size);
   for (const r of rows) {
+    // The filename comes from the page; the fingerprint names are ours.
     console.log(
-      `  ${kib(r.size).padStart(8)}  ${r.path.split('/').pop().padEnd(28)}${r.hits.join(', ')}`,
+      `  ${kib(r.size).padStart(8)}  ${untrusted(r.path.split('/').pop(), 40).padEnd(30)}${r.hits.join(', ')}`,
     );
   }
   console.log(`  ${kib(total).padStart(8)}  total (uncompressed)`);

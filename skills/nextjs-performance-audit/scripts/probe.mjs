@@ -13,7 +13,7 @@
  * Flags: --desktop  --settle=<ms>  --no-throttle  --json
  */
 
-import { DESKTOP, MOBILE, launch, parseArgs } from './cdp.mjs';
+import { DESKTOP, MOBILE, launch, parseArgs, untrusted } from './cdp.mjs';
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const [command, url, ...rest] = positional;
@@ -96,7 +96,7 @@ async function cls() {
     if (s.value < 0.0001) continue;
     console.log(`\n  ${round(s.value)} at ${s.timeMs}ms`);
     for (const src of s.sources) {
-      console.log(`    ${src.node}${src.text ? `  "${src.text}"` : ''}`);
+      console.log(`    ${untrusted(src.node, 90)}${src.text ? `  ${untrusted(src.text, 60)}` : ''}`);
       if (src.from && src.to) {
         const moved = src.to.y - src.from.y;
         const grew = src.to.h - src.from.h;
@@ -146,8 +146,8 @@ async function consoleErrors() {
   if (flags.json) return out({ messages: unique });
 
   if (!unique.length) return console.log('No console errors or warnings.');
-  console.log(`${unique.length} distinct message(s):`);
-  for (const m of unique) console.log(`  [${m.kind}] ${m.text}`);
+  console.log(`${unique.length} distinct message(s), as reported by the page:`);
+  for (const m of unique) console.log(`  [${m.kind}] ${untrusted(m.text, 200)}`);
 }
 
 /**
@@ -270,9 +270,11 @@ async function hidden() {
 
   console.log(`In the first viewport, invisible early     : ${early.inView.length}`);
   for (const e of early.inView)
-    console.log(`   ${e.tag}.${e.cls}${e.text ? `  "${e.text}"` : ''}`);
+    console.log(
+      `   ${e.tag} ${untrusted(e.cls, 70)}${e.text ? `  ${untrusted(e.text, 60)}` : ''}`,
+    );
   console.log(`In the first viewport, invisible after JS  : ${late.inView.length}`);
-  for (const e of late.inView) console.log(`   ${e.tag}.${e.cls}`);
+  for (const e of late.inView) console.log(`   ${e.tag} ${untrusted(e.cls, 70)}`);
   console.log(
     `Below the fold, invisible (scroll reveals) : ${late.below.length}  - expected, not a fault`,
   );
