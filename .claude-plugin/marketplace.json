@@ -9,13 +9,16 @@
     {
       "name": "drazenbebic-skills",
       "source": "./",
-      "description": "Agent skills for real engineering work, starting with a Next.js App Router performance audit method.",
+      "description": "Agent skills for real engineering work: a Next.js App Router performance audit method and a GitHub review-queue workflow.",
       "category": "engineering",
       "keywords": [
         "nextjs",
         "performance",
         "lighthouse",
-        "core-web-vitals"
+        "core-web-vitals",
+        "code-review",
+        "github",
+        "pull-requests"
       ]
     }
   ]

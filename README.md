@@ -86,6 +86,34 @@ otherwise via `npx`. See
 [`.agents/adr/0001`](.agents/adr/0001-skill-scripts-are-dependency-free-node.md)
 for why the tooling is Node with no dependencies.
 
+### [`review-requests`](skills/review-requests)
+
+Working through every GitHub pull request that is waiting for your review —
+reviewing each one, posting short inline comments, and deciding approve,
+comment, or request changes.
+
+It doesn't bring its own review method. Each PR goes through the
+[`code-review`](https://github.com/mattpocock/skills) skill's Standards and
+Spec axes, used unmodified, plus a Correctness pass, because "does it follow
+the rules" and "does it do what was asked" both miss "does it work" — and
+that is where the findings that matter tend to be. What it adds is everything
+around the review: the queue, one sub-agent per PR, the Jira ticket as the
+spec, verifying blocking findings before they're posted, and comments short
+enough to be read. Running it twice reviews nothing the second time; a PR only
+comes back when someone re-requests you, and then only the new commits are
+reviewed.
+
+| script | what it does |
+|---|---|
+| `prepare.mjs` | builds the queue: fetches PR heads read-only, picks the diff base (or the commit you last reviewed), writes each PR's spec with linked issues and Jira tickets |
+| `brief.mjs` | renders one PR's sub-agent prompt: the `code-review` bindings from the manifest, the Correctness axis, the finding format, and your earlier comments on a re-review |
+| `post.mjs` | posts one review, after checking every inline comment against the PR's diff |
+| `cleanup.mjs` | removes the refs one run fetched |
+
+Requires Node ≥ 22, an authenticated `gh`, and `code-review`
+(`npx skills add mattpocock/skills --skill code-review`). Jira tickets are
+fetched with the Atlassian CLI (`acli`) when it's installed.
+
 ## Licence
 
 MIT
