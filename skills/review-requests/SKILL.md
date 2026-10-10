@@ -1,6 +1,6 @@
 ---
 name: review-requests
-description: Work through every open GitHub pull request that is waiting for your review — fetch the queue, review each PR with the code-review skill's Standards and Spec axes plus a Correctness pass, verify the findings, and post short inline comments with an approve / comment / request-changes verdict. Use this whenever someone asks to review "my PRs", "PRs assigned to me", "review requests", "my review queue", "everything waiting on me", or one or more PR numbers to review and post on — even if they don't say "bulk". Also use it to re-review PRs that were re-requested after changes, and whenever review comments or an approve / request-changes decision should end up on GitHub rather than just in the terminal.
+description: Work through every open GitHub pull request that is waiting for your review — fetch the queue, review each PR with the code-review skill's Standards and Spec axes plus a Correctness pass, verify the findings, and post short inline comments with an approve / comment / request-changes verdict — directly, or interactively, showing each comment with its code and reasoning so you can post, skip, or rewrite it. Use this whenever someone asks to review "my PRs", "PRs assigned to me", "review requests", "my review queue", "everything waiting on me", or one or more PR numbers to review and post on — even if they don't say "bulk". Also use it to re-review PRs that were re-requested after changes, when they want to check or write the comments themselves before anything is posted, and whenever review comments or an approve / request-changes decision should end up on GitHub rather than just in the terminal.
 compatibility: Requires git, an authenticated GitHub CLI (`gh`), Node ≥ 22, and the `code-review` skill from mattpocock/skills. Uses the Atlassian CLI (`acli`) for Jira tickets referenced in PRs.
 ---
 
@@ -40,9 +40,18 @@ then `acli jira auth login`).
 
 ## Ground rules
 
-**Asking for this skill is permission to post.** Reviews go to GitHub without a
-confirmation round-trip. The exception is a dry run — if the user says "dry run",
-"don't post", or similar, do everything except posting and show the reviews instead.
+**Pick the mode before anything else.** There are three:
+
+| Mode | What happens |
+|---|---|
+| Non-interactive | Reviews go to GitHub without a confirmation round-trip — asking for this skill in this mode is permission to post. |
+| Interactive | Everything is reviewed as usual, then you walk the user through each comment — the code, why it matters, the drafted text — and they post it, skip it, or write their own (step 6). Nothing is posted without their say. |
+| Dry run | Everything except posting; show the reviews instead. |
+
+If the request already says which — "just post them", "dry run", "don't post", "let me
+check the comments first", "interactive" — use that. Otherwise ask once, before step 1,
+offering non-interactive and interactive. Ask up front, not when the reviews are ready,
+so a non-interactive run can go unattended.
 
 **Less is more.** A review is read by a busy colleague between two other tasks. Short,
 concrete comments get acted on; walls of text get skimmed and resented. One or two
@@ -177,26 +186,78 @@ line — merge conflicts (`mergeable: CONFLICTING` in the manifest), stale gener
 > has administrator permissions appears to have been inverted, possibly
 > during the refactoring in the most recent commit. This means that...
 
-### 6. Post
+Write each PR's review to a JSON file, comments most important first. Keep each
+finding's `severity`, `axis`, and `why` on its comment — `show.mjs` displays them in
+the interactive walkthrough, and `post.mjs` doesn't post them:
 
-Write each review to a JSON file and post it:
+```json
+{ "pr": 123, "commit": "<head sha from the manifest>", "verdict": "COMMENT", "body": "",
+  "comments": [{ "path": "src/x.ts", "line": 42, "side": "RIGHT", "body": "...",
+                 "severity": "blocking", "axis": "correctness", "why": "..." }] }
+```
+
+### 6. Walk through the comments (interactive mode)
+
+Skip this step unless the mode is interactive. Start it only once every PR has been
+reviewed, verified, and drafted, so the sub-agents still run in parallel and the user
+isn't left waiting between questions.
+
+**PRs without comments first.** List the PRs you would approve without comments — and
+the re-requested `unchanged` PRs whose replies you found convincing, each with a
+few-word reason — and ask once: approve them all, or decide each one.
+
+**Then each PR with comments, one comment at a time,** in the order of the draft:
+
+```bash
+node scripts/show.mjs <manifest.json> review-123.json 1     # comment 1 of #123
+```
+
+It prints Markdown: severity and axis, the code around the anchored line (read from the
+fetched PR head), the `why`, and the drafted comment. Put that output in your message
+as it is — the user doesn't always see tool output — and ask what to do with the comment:
+
+- **Post** — keep it as drafted.
+- **Skip** — drop it.
+- **Post this and the rest of this PR** — keep it and every remaining comment on this
+  PR as drafted, and go on to the verdict.
+- **Write my own** — the user types the comment. Post their text exactly as written: don't
+  rephrase, shorten, translate, or add a `nit:` prefix. It stays on the same line.
+
+If your harness has a multiple-choice question tool, use it, with its free-text answer as
+"write my own". Otherwise ask in plain text and accept "post", "skip", "rest", or the
+replacement comment. If the draft has a review body, go through it first, the same way.
+Update the draft file as you go: remove what was skipped and replace rewritten bodies.
+
+**Then the verdict.** Work it out again from the comments that are left: a `grave` one
+means `REQUEST_CHANGES`, a `blocking` one means `COMMENT`, and nits or nothing mean
+`APPROVE`. Offer that verdict first, with the other two verdicts and "don't post this
+review" as the alternatives. `COMMENT` and `REQUEST_CHANGES` need at least one comment
+or a body, so if the user skipped everything and still picks one, ask them for a
+one-sentence body. Then post that PR right away (step 7) before moving on — if the run
+stops halfway, the decisions already made are on GitHub, and each head has less time to
+move under you.
+
+If the user says to stop, stop: post nothing more, and list the remaining PRs in the
+report as not posted.
+
+### 7. Post
 
 ```bash
 node scripts/post.mjs review-123.json            # or --dry-run
 ```
 
-```json
-{ "pr": 123, "commit": "<head sha from the manifest>", "verdict": "COMMENT", "body": "",
-  "comments": [{ "path": "src/x.ts", "line": 42, "side": "RIGHT", "body": "..." }] }
-```
+Non-interactive, post every review. Interactive, each one is posted as soon as the user
+settles its verdict.
 
 The script checks each comment against the PR's diff before posting (GitHub rejects
 the whole review if one comment misses a hunk), and folds any that don't anchor into
 the body rather than dropping them. If it exits with code 3, the PR received new
 commits while you were reviewing — re-run `prepare.mjs` for that PR and review the new
-head; don't post comments against code that has moved.
+head; don't post comments against code that has moved. In interactive mode, tell the
+user which PR moved and offer to review the new head and go through it again: what they
+decided was about code that has since changed.
 
-### 7. Clean up and report
+### 8. Clean up and report
 
 ```bash
 node scripts/cleanup.mjs <manifest.json>
@@ -206,7 +267,8 @@ It removes only the refs this run fetched, so a review running in parallel elsew
 keeps its own.
 
 Report back with one table — PR number, verdict, and for non-approvals the main issue
-in a few words — then a line listing approvals without comments. No author names.
+in a few words — then a line listing approvals without comments, and one listing PRs
+that were not posted. No author names.
 
 ## Re-reviews and idempotency
 

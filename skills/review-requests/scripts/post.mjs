@@ -10,6 +10,8 @@
 //     "body": "",
 //     "comments": [{ "path": "src/x.ts", "line": 42, "side": "RIGHT", "body": "..." }] }
 //
+// Other fields on a comment (`severity`, `axis`, `why` — kept for show.mjs) are not posted.
+//
 // Comments that do not anchor are folded into the review body as `path:line — text`
 // instead of being dropped.
 

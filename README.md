@@ -103,10 +103,18 @@ enough to be read. Running it twice reviews nothing the second time; a PR only
 comes back when someone re-requests you, and then only the new commits are
 reviewed.
 
+It posts on its own, or — in interactive mode — walks you through every
+comment first: the code it points at, why it matters, and the text it would
+post, which you keep, skip, or replace with your own. The verdict follows from
+what you kept. See
+[`.agents/adr/0002`](.agents/adr/0002-review-requests-interactive-mode.md) for
+how the modes were decided.
+
 | script | what it does |
 |---|---|
 | `prepare.mjs` | builds the queue: fetches PR heads read-only, picks the diff base (or the commit you last reviewed), writes each PR's spec with linked issues and Jira tickets |
 | `brief.mjs` | renders one PR's sub-agent prompt: the `code-review` bindings from the manifest, the Correctness axis, the finding format, and your earlier comments on a re-review |
+| `show.mjs` | renders a drafted review for the interactive walkthrough: each comment with its code from the PR head, the reasoning, and the text to post |
 | `post.mjs` | posts one review, after checking every inline comment against the PR's diff |
 | `cleanup.mjs` | removes the refs one run fetched |
 

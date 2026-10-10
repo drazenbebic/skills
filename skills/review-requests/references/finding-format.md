@@ -18,6 +18,7 @@ finding in this shape:
     "side": "RIGHT",
     "severity": "blocking",
     "evidence": "the quoted line(s), or the failing input → wrong result",
+    "why": "What goes wrong and why it matters, for the reviewer: two or three sentences.",
     "comment": "The comment as it would be posted: one or two sentences."
   }
 ]
@@ -36,6 +37,9 @@ finding in this shape:
   - `blocking` — a real bug, regression, missing requirement, or a clear breach of a
     documented standard with real impact. Something you would not merge.
   - `nit` — small, correct-but-could-be-better, judgement-call smells. Fine to merge.
+- `why` is read by the reviewer deciding whether to post the comment, not by the PR's
+  author. Give the reasoning the short comment leaves out: what input or path triggers
+  the problem, what happens then, and why it matters. Two or three sentences.
 - `comment` is short and concrete: what is wrong and, if not obvious, what to do.
   Prefix nits with `nit: `. A ```` ```suggestion ```` block is welcome when the fix is
   a small exact replacement of the commented line(s). No walls of text — less is more.
