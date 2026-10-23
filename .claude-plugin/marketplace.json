@@ -9,7 +9,7 @@
     {
       "name": "drazenbebic-skills",
       "source": "./",
-      "description": "Agent skills for real engineering work: a Next.js App Router performance audit method and a GitHub review-queue workflow.",
+      "description": "Agent skills for real engineering and game-development work: a Next.js App Router performance audit method, a GitHub review-queue workflow, and a game-dialogue writing method.",
       "category": "engineering",
       "keywords": [
         "nextjs",
@@ -18,7 +18,11 @@
         "core-web-vitals",
         "code-review",
         "github",
-        "pull-requests"
+        "pull-requests",
+        "game-dev",
+        "game-writing",
+        "dialogue",
+        "narrative-design"
       ]
     }
   ]

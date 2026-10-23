@@ -122,6 +122,33 @@ Requires Node ≥ 22, an authenticated `gh`, and `code-review`
 (`npx skills add mattpocock/skills --skill code-review`). Jira tickets are
 fetched with the Atlassian CLI (`acli`) when it's installed.
 
+### [`game-dialogue`](skills/game-dialogue)
+
+Writing, revising and reviewing anything a game character says or writes
+inside the world — conversations, barks, companion banter, boss speeches,
+quest-givers, notes and carvings, item flavour text — in any engine or format,
+and building the voice profiles that keep each character consistent.
+
+Its central claim is that **a game line lives in its runtime context, and
+language models fail exactly where the craft is hardest**. A line is judged by
+what triggers it, how often it's heard, who says it to whom and what the player
+just did; the failures that hurt shipped games were invisible in the script.
+And models, left alone, drop subtext, name feelings, flatten every character
+into one voice and soften villains. So the skill reads the project's canon and
+the character's own lines before writing anything, keeps a voices file in the
+game's repository so the next session hears the same voice, drafts takes that
+differ in approach rather than wording, and selects between them with concrete
+tests — not by polishing one draft until it feels right. The project's own
+rules always beat its defaults.
+
+| script | what it does |
+|---|---|
+| `check.mjs` | flags suspects in drafted lines: length, the project's banned words, stock model phrasing and default names, named feelings, therapy-speak, gendered address, placeholder mismatches, and takes that are rewordings of each other |
+
+Requires Node ≥ 22. See
+[`.agents/adr/0003`](.agents/adr/0003-game-skills.md) for how game skills are
+named and why they read the project first.
+
 ## Licence
 
 MIT
