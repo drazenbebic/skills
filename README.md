@@ -149,6 +149,35 @@ Requires Node ≥ 22. See
 [`.agents/adr/0003`](.agents/adr/0003-game-skills.md) for how game skills are
 named and why they read the project first.
 
+### [`game-story`](skills/game-story)
+
+Creating a game's story from an idea, and extracting, auditing, revising or
+rewriting the story of an existing game — premise, cast, antagonist, world,
+tone, the beat map tied to missions and progression, and what the player
+learns when — kept in the project's story bible, `STORY.md`, which
+`game-dialogue` reads as canon.
+
+Its central claim is that **a game story turns generic when it has no owned
+particulars, and language models reach for exactly the defaults the craft
+protects against**. Model-written stories put the climax early, resolve
+tension almost completely, write friendly casts and festival endings, and
+converge on the same names and settings across vendors — and model judges
+rate them highly. So the skill interrogates, structures and checks rather than
+invents: it draws particulars out of the owner, offers premises that differ in
+kind, writes beats as changes in world state with stable IDs that dialogue and
+quest design can cite, marks every entry the owner hasn't approved as
+proposed, and for an existing game extracts the story the build actually tells
+before judging it. It never certifies its own story as original or tense.
+
+| script | what it does |
+|---|---|
+| `check.mjs` | flags suspects in a story bible or premise drafts: model-default names, settings and story templates, stock plot moves, softened villains, festival resolutions, stated lessons — and, in the STORY.md format, missing statuses and fields, broken IDs, flags needed but never set, reveals with a single carrier, unpaid promises, and a front-loaded climax |
+
+Requires Node ≥ 22. See
+[`.agents/adr/0004`](.agents/adr/0004-game-story-and-the-story-bible.md) for
+how the story and dialogue skills divide the work, and why quest design is
+next.
+
 ## Licence
 
 MIT

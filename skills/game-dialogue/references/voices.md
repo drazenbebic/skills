@@ -9,7 +9,11 @@ a companion to another writer, who struggled to find it).
 ## Before writing a character
 
 Find the answers in the project first — canon docs, the character's existing lines, the glossary —
-and ask the owner only what is missing, in one batch. The must-knows are marked **(!)**; for the rest,
+and ask the owner only what is missing, in one batch. Where the project keeps a story bible
+(`STORY.md`), its cast entry holds who the character *is* — want, weakness, Lie, arc, stance, their
+signature detail, what they know and when — so take those from it rather than restating them, and use
+this list for what the bible leaves to you: how they speak. The signature is often where a voice
+starts. The must-knows are marked **(!)**; for the rest,
 assume and say so.
 
 1. **(!)** Who are they, in one line, and what is their role in the game (vendor, companion, villain,
@@ -46,7 +50,8 @@ and each change needs a cause the player sees.
 ## <Name>
 
 - **Core** *(core)*: one line — "<adjective> <role> who <want>, <the complication>".
-- **Want / need / lie / wound** *(arc: want, need; core: wound)*: one line each.
+- **Want / need / lie / wound** *(arc: want, need; core: wound)*: one line each — or
+  `STORY.md → <Name>` where the story bible holds them.
 - **The player should feel** *(arc)*: e.g. trust → unease → pity, by act or stage.
 - **Register** *(core baseline, arc shifts)*: where on formal ↔ colloquial; up with whom, down with whom.
 - **Attitude** *(core)*: outlook in a sentence or two.
@@ -83,7 +88,8 @@ Speech changes with the listener, and forms of address are rarely symmetric, so 
 ## Building a profile from existing lines
 
 Where a character already has lines, those lines are the voice. Derive the profile from them; never
-contradict them.
+contradict them. A story bible's placeholder line for a character is a seed for the voice, not a
+sample: replace it once the profile exists.
 
 1. **Collect every line** the character has — script files, string catalogs, story docs, the novel
    if there is one — and note where each sits in the story.
@@ -119,7 +125,8 @@ max-chars: <characters per line or box, if the UI sets one>
 address: <any | neutral>   # neutral when the player character is player-created
 ```
 
-- <Prose rules the checker cannot check: tone, what may never be revealed, who may never be named,
+- <Prose rules the checker cannot check: tone, what may never be revealed (or a pointer to the story
+  bible's reveal schedule, STORY.md → Reveals, instead of a copy), who may never be named,
   where text may come from, markup and placeholder conventions.>
 
 ## <Name>
