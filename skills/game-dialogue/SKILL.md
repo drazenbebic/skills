@@ -1,6 +1,6 @@
 ---
 name: game-dialogue
-description: Write, revise or review anything a game character says or writes inside the world — conversations, NPC lines, barks, companion banter, boss speeches, quest-giver text, notes, letters, carvings, item flavour text — and build the voice profiles that keep each character consistent. Use this whenever a game needs lines for a character, a dialogue tree or choices, a bark or chatter pool, a character's voice pinned down, or a critique of existing game dialogue, in any engine or format (Ink, Yarn Spinner, a string catalog, a spreadsheet) — even when the request is just "write what the smith says", "give the guards something to say" or "make this NPC sound less flat". Not for UI, menu or tutorial text.
+description: Write, revise or review anything a game character says or writes inside the world — conversations, NPC lines, barks, companion banter, boss speeches, quest-giver text, notes, letters, carvings, item flavour text — and build the voice profiles that keep each character consistent. Use this whenever a game needs lines for a character, a dialogue tree or choices, a bark or chatter pool, a character's voice pinned down, or a critique of existing game dialogue, in any engine or format (Ink, Yarn Spinner, a string catalog, a spreadsheet) — even when the request is just "write what the smith says", "give the guards something to say" or "make this NPC sound less flat". Not for UI, menu or tutorial text, or for the story itself — plot, cast, world (game-story).
 compatibility: The bundled checker needs Node ≥ 22 (no dependencies).
 ---
 
@@ -25,6 +25,9 @@ drafts **takes that differ in approach**, and selects between them with **concre
   project is silent. If a project rule looks like a mistake, say so — and still follow it.
 - **No character without a profile.** Load their voice from the voices file, or build one from canon
   and their existing lines before drafting.
+- **The story bible decides what is true, and when it may be said.** A line that needs a fact the
+  bible doesn't have, or a reveal earlier than it allows, goes back to the bible as a proposal
+  (game-story) — never written around it.
 - **Takes, not one draft.** For an authored line, 2–3 takes that try different approaches — a
   different tactic, a different move, a different thing withheld. Rewordings are not takes.
 - **Drafts first, files after.** Show takes to the owner; write into the project's files only after
@@ -59,8 +62,10 @@ introduction does. But every mode reads the project first and runs the checks.
 
 Before anything else, find:
 
-- **Canon**: story, lore, plot or character docs (`docs/`, a wiki export, a GDD's narrative
-  section); a glossary; settled design decisions about text.
+- **Canon**: the story bible — `STORY.md` (game-story's file) or the project's own story, lore, plot
+  or character docs (`docs/`, a wiki export, a GDD's narrative section); a glossary; settled design
+  decisions about text. In STORY.md, `settled` and `as-built` entries are canon; `proposed` and `open`
+  ones are not yet.
 - **The voices file**: `VOICES.md`, usually beside the narrative docs. If it exists, its house rules
   and profiles are binding.
 - **Existing lines**: every file text lives in — catalogs, scripts, spreadsheets, content data —
@@ -83,7 +88,8 @@ For every line or pool, settle:
 - **Speaker → listener** (and who else is in earshot).
 - **Trigger and frequency**: once, per visit, per encounter, per minute.
 - **What the speaker wants** from the listener, now.
-- **What the player knows** at this moment, and what they most likely just did.
+- **What the player knows** at this moment, and what they most likely just did — and what the
+  speaker knows (STORY.md → *Reveals*, where the project keeps one).
 - **Line type** — then open its section in `references/line-types.md`.
 - **Medium and budget**: voiced or text; box, subtitle or word budget; interruptible or not.
 - **State**: what the line reads (class, choices, flags) and what it writes.
@@ -156,7 +162,8 @@ The owner reads lines, not process. Give them, in this order:
 5. **What the checks changed** — only findings that changed a line or still stand, one line each. A
    clean run is one line ("checker: clean"), not a table; never list tests that found nothing.
 6. **Open items**, only those that apply:
-   - new facts the lines introduce, as **proposed canon** for approval;
+   - new facts the lines introduce, as **proposed canon** for approval (entries for STORY.md, where
+     the project keeps one);
    - lines in other languages, **for a native speaker's check**;
    - what only a **playtest or table read** can judge (frequency, timing, overlap);
    - **consultation flags** for cultural or identity content;

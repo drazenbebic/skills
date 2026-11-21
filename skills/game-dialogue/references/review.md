@@ -67,7 +67,8 @@ Run these on every draft, and write down what each found.
 7. **Register against setting.** Does every idiom belong in this world and this mouth?
 8. **The joke test.** Is each joke this character's tactic, or a wink at the player?
 9. **State preconditions.** What must be true for this line to play? Can it play when that isn't true?
-10. **Canon.** Does any line introduce a fact the canon doesn't have? List it as proposed canon.
+10. **Canon.** Does any line introduce a fact the canon doesn't have, or reveal one earlier than the
+    story bible's reveal schedule allows? List new facts as proposed canon; move early reveals.
 11. **Read it aloud.** Stumbles, tongue-twisters, sentences no one could say in one breath.
 
 ## Anti-patterns

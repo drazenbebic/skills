@@ -1,4 +1,5 @@
-// Tests for check.mjs. Run: node --test skills/game-dialogue/scripts/
+// Tests for check.mjs. Run: node --test 'skills/game-dialogue/scripts/*.test.mjs'
+// (Node 22+ reads --test arguments as globs, so a bare directory finds no tests.)
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
